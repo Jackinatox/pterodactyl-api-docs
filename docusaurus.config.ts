@@ -224,10 +224,10 @@ const config: Config = {
     
     // Giscus configuration
     giscus: {
-      repo: 'NETVPX/pterodactyl-api-docs',
-      repoId: '1031403272',
+      repo: process.env.GISCUS_REPO,
+      repoId: process.env.GISCUS_REPO_ID,
       category: 'Pages',
-      categoryId: '45543850',
+      categoryId: process.env.GISCUS_CATEGORY_ID,
     },
     
     // Comprehensive metadata for SEO
