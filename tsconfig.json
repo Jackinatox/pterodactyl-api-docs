@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es5",
+    "paths": {
+      "@site/*": ["./src/*"],
+      "@generated/*": ["./.docusaurus/*"],
+      "@docusaurus/*": ["./node_modules/@docusaurus/*"]
+    },
+    "types": ["@docusaurus/module-type-aliases", "@docusaurus/types"]
+  },
+  "include": [
+    "src/**/*",
+    "*.js",
+    "*.ts",
+    "*.tsx",
+    "docusaurus.config.ts",
+    "sidebars.ts"
+  ],
+  "exclude": [
+    ".docusaurus",
+    "build",
+    "node_modules",
+    "tests"
+  ]
+}

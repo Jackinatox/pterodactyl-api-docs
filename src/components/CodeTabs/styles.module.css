@@ -1,0 +1,127 @@
+.apiCodeTabs {
+  margin: 1rem 0;
+}
+
+.apiCodeTabs .tabs__item {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: var(--ifm-color-content-secondary);
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.apiCodeTabs .tabs__item:hover {
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-content);
+}
+
+.apiCodeTabs .tabs__item--active {
+  background: var(--ifm-color-primary);
+  color: white;
+  border-color: var(--ifm-color-primary);
+}
+
+.apiCodeTabs .tabs__item--active:hover {
+  background: var(--ifm-color-primary-dark);
+}
+
+.apiCodeTabs [role="tabpanel"] {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+
+.apiCodeTabs [role="tabpanel"] pre {
+  margin: 0;
+  border-radius: 0;
+}
+
+/* Language-specific styling */
+.apiCodeTabs .tabs__item[data-value="curl"] {
+  position: relative;
+}
+
+.apiCodeTabs .tabs__item[data-value="curl"]::before {
+  content: "🌐";
+  margin-right: 0.5rem;
+}
+
+.apiCodeTabs .tabs__item[data-value="javascript"]::before {
+  content: "⚡";
+  margin-right: 0.5rem;
+}
+
+.apiCodeTabs .tabs__item[data-value="python"]::before {
+  content: "🐍";
+  margin-right: 0.5rem;
+}
+
+.apiCodeTabs .tabs__item[data-value="php"]::before {
+  content: "🐘";
+  margin-right: 0.5rem;
+}
+
+.apiCodeTabs .tabs__item[data-value="go"]::before {
+  content: "🚀";
+  margin-right: 0.5rem;
+}
+
+.apiCodeTabs .tabs__item[data-value="java"]::before {
+  content: "☕";
+  margin-right: 0.5rem;
+}
+
+.apiCodeTabs .tabs__item[data-value="csharp"]::before {
+  content: "#️⃣";
+  margin-right: 0.5rem;
+}
+
+.apiCodeTabs .tabs__item[data-value="ruby"]::before {
+  content: "💎";
+  margin-right: 0.5rem;
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .apiCodeTabs .tabs__item {
+  background: var(--ifm-background-surface-color);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .apiCodeTabs .tabs__item:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .apiCodeTabs [role="tabpanel"] {
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .apiCodeTabs .tabs__item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .apiCodeTabs .tabs__item::before {
+    margin-right: 0.25rem;
+  }
+}
+
+/* Animation for tab switching */
+.apiCodeTabs [role="tabpanel"] {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 

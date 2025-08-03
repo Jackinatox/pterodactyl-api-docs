@@ -1,0 +1,95 @@
+{
+  "name": "netvpx-pterodactyl-api-docs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Complete API documentation for Pterodactyl Panel v1 - Maintained by NETVPX for the community",
+  "keywords": [
+    "pterodactyl",
+    "api",
+    "documentation",
+    "netvpx",
+    "server-management"
+  ],
+  "homepage": "https://pterodactyl-api-docs.netvpx.com",
+  "bugs": {
+    "url": "https://github.com/netvpx/pterodactyl-api-docs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/netvpx/pterodactyl-api-docs.git"
+  },
+  "license": "MIT",
+  "author": "NETVPX",
+  "scripts": {
+    "docusaurus": "docusaurus",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "build:social-cards": "node scripts/create-default-social-card.js && npm run build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "clear": "docusaurus clear",
+    "serve": "docusaurus serve",
+    "write-translations": "docusaurus write-translations",
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "typecheck": "tsc",
+    "test": "cd tests && jest",
+    "test:watch": "cd tests && jest --watch",
+    "test:coverage": "cd tests && jest --coverage",
+    "test:api": "cd tests && jest",
+    "test:api:safe": "cd tests && SAFE_MODE=true jest",
+    "test:api:full": "cd tests && SAFE_MODE=false jest",
+    "test:api:client": "cd tests && jest client-api.test.ts",
+    "test:api:application": "cd tests && jest application-api.test.ts",
+    "test:api:websocket": "cd tests && jest websocket-api.test.ts",
+    "test:api:verbose": "cd tests && VERBOSE=true jest",
+    "test:ci": "cd tests && SAFE_MODE=true jest --ci --coverage --passWithNoTests",
+    "validate:codetabs": "node scripts/validate-codetabs.js"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.4.0",
+    "@docusaurus/preset-classic": "^3.4.0",
+    "@docusaurus/theme-mermaid": "^3.4.0",
+    "@easyops-cn/docusaurus-search-local": "^0.52.0",
+    "@giscus/react": "^3.1.0",
+    "@mdx-js/react": "^3.0.0",
+    "canvas": "^3.1.2",
+    "clsx": "^2.0.0",
+    "prism-react-renderer": "^2.3.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "3.8.1",
+    "@docusaurus/types": "3.8.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "axios": "^1.6.0",
+    "chalk": "^4.1.2",
+    "dotenv": "^16.3.0",
+    "jest": "^29.7.0",
+    "jest-environment-node": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0",
+    "ws": "^8.14.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0"
+  }
+}

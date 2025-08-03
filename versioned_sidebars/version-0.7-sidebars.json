@@ -1,0 +1,30 @@
+{
+  "tutorialSidebar": [
+    "intro",
+    {
+      "type": "category",
+      "label": "Client API (v0.7)",
+      "items": [
+        "client/account",
+        "client/servers", 
+        "client/files",
+        "client/databases",
+        "client/schedules",
+        "client/network",
+        "client/users",
+        "client/backups"
+      ]
+    },
+    {
+      "type": "category", 
+      "label": "Application API (v0.7)",
+      "items": [
+        "application/users",
+        "application/servers",
+        "application/nodes", 
+        "application/locations",
+        "application/nests"
+      ]
+    }
+  ]
+}

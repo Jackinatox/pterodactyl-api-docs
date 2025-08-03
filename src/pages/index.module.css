@@ -1,0 +1,124 @@
+/**
+ * NETVPX Homepage Styling
+ */
+
+.heroBanner {
+  padding: 6rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-secondary) 100%);
+  /* Use theme-aware text color */
+  color: #ffffff;
+}
+
+/* Ensure proper text colors for light and dark modes */
+[data-theme='light'] .heroBanner {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .heroBanner {
+  color: #ffffff;
+}
+
+/* Specific styling for the hero title to ensure visibility */
+.heroBanner .hero__title {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+}
+
+.heroBanner .hero__subtitle {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.heroBanner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 20-8.954 20-20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+  z-index: 0;
+}
+
+.heroBanner > .container {
+  position: relative;
+  z-index: 1;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 3rem 1rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.buttonSecondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  /* Use theme-aware text color for buttons */
+  color: var(--ifm-hero-text-color, #ffffff);
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+/* Light mode button styling */
+[data-theme='light'] .buttonSecondary {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Dark mode button styling */
+[data-theme='dark'] .buttonSecondary {
+  color: #f0f0f0;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.buttonSecondary:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  /* Use theme-aware hover color */
+  color: var(--ifm-hero-text-color, #ffffff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Light mode hover styling */
+[data-theme='light'] .buttonSecondary:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Dark mode hover styling */
+[data-theme='dark'] .buttonSecondary:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+@media screen and (max-width: 576px) {
+  .buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .buttons .button {
+    width: 100%;
+    max-width: 280px;
+  }
+}

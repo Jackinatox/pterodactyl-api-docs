@@ -1,0 +1,48 @@
+# robots.txt for NETVPX Pterodactyl API Documentation
+# Last updated: 2025
+
+User-agent: *
+Allow: /
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Disallow admin/private sections if any exist
+# User-agent: *
+# Disallow: /admin/
+# Disallow: /private/
+
+# Disallow search result pages to avoid duplicate content
+# User-agent: *
+# Disallow: /search
+
+# Allow sitemap crawling
+Sitemap: https://pterodactyl-api-docs.netvpx.com/sitemap.xml
+
+# Crawl-delay for respectful crawling (optional)
+# Crawl-delay: 1 
