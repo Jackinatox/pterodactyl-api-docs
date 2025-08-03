@@ -7,7 +7,7 @@ import {useDoc} from '@docusaurus/plugin-content-docs/client';
 
 type Props = WrapperProps<typeof FooterType>;
 
-export default function FooterWrapper(props: Props): JSX.Element {
+export default function FooterWrapper(props: Props) {
   const {metadata} = useDoc();
   const {frontMatter} = metadata;
   
