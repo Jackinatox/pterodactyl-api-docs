@@ -224,10 +224,10 @@ const config: Config = {
     
     // Giscus configuration
     giscus: {
-      repo: 'YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME',
-      repoId: 'YOUR_REPOSITORY_ID',
-      category: 'Announcements',
-      categoryId: 'YOUR_CATEGORY_ID',
+      repo: process.env.GISCUS_REPO,
+      repoId: process.env.GISCUS_REPO_ID,
+      category: 'Pages',
+      categoryId: process.env.GISCUS_CATEGORY_ID,
     },
     
     // Comprehensive metadata for SEO
