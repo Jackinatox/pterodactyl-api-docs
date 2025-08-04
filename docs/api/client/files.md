@@ -869,26 +869,60 @@ curl_close($ch);
 $signedUrl = $data['attributes']['url'];
 
 // Step 2: Upload multiple files
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $signedUrl);
-curl_setopt($ch, CURLOPT_POST, true);
+// Note: PHP's cURL doesn't support multiple values for the same field name
+// in the same way as other languages. Each file needs to be uploaded
+// separately or use a custom multipart body builder.
 
-// Build multipart form data with multiple files
-$postFields = ['directory' => $directory];
-foreach ($filePaths as $index => $filePath) {
-    $postFields["files[{$index}]"] = new CURLFile($filePath);
+// Option 1: Upload files one by one
+foreach ($filePaths as $filePath) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $signedUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, [
+        'files' => new CURLFile($filePath),
+        'directory' => $directory
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+    $uploadResponse = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    if ($httpCode !== 200 && $httpCode !== 204) {
+        echo "Failed to upload: " . basename($filePath) . "\\n";
+        break;
+    }
 }
 
-curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+echo "Files uploaded successfully\\n";
 
-$uploadResponse = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
+// Option 2: Use Guzzle for better multipart support
+// composer require guzzlehttp/guzzle
+/*
+use GuzzleHttp\\Client;
+use GuzzleHttp\\Psr7;
 
-if ($httpCode === 200 || $httpCode === 204) {
-    echo "Multiple files uploaded successfully\\n";
+$client = new Client();
+
+// Get signed URL (same as above)...
+
+$multipart = [];
+foreach ($filePaths as $filePath) {
+    $multipart[] = [
+        'name' => 'files',
+        'contents' => Psr7\\Utils::tryFopen($filePath, 'r'),
+        'filename' => basename($filePath)
+    ];
 }
+$multipart[] = [
+    'name' => 'directory',
+    'contents' => $directory
+];
+
+$response = $client->post($signedUrl, [
+    'multipart' => $multipart
+]);
+*/
 ?>`
   }}
 />
