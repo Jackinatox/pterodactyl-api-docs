@@ -369,93 +369,370 @@ Returns empty response body with status code 204.
 
 ## Upload Files
 
-Upload files to the server via multipart form data.
+Upload files to the server using a two-step process: first get a signed upload URL, then upload the file.
+
+### How File Upload Works
+
+The Pterodactyl file upload system uses a secure two-step process:
+
+1. **Get Upload URL**: Request a signed upload URL from the API (`GET /api/client/servers/{server}/files/upload`)
+2. **Upload File**: Use the signed URL to upload your file(s) via multipart form data
+
+This approach ensures secure file uploads without exposing server credentials and allows the panel to validate permissions before accepting files.
+
+### Step 1: Get Upload URL
 
 **`GET /api/client/servers/{server}/files/upload`**
 
-### Example Request
+#### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `directory` | string | No | Target directory for upload (default: `/`) |
+
+#### Example Response
+
+```json
+{
+  "object": "signed_url",
+  "attributes": {
+    "url": "https://your-panel.com/upload/signed/abc123..."
+  }
+}
+```
+
+### Step 2: Upload File to Signed URL
+
+**`POST {signed_url}`**
+
+Use the signed URL from Step 1 to upload your file(s).
+
+#### Form Data Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `files` | file | Yes | File to upload (use `files` as field name) |
+| `directory` | string | Yes | Target directory (must match Step 1) |
+
+### Complete Example
 
 <CodeTabs
   endpoint="/api/client/servers/{server}/files/upload"
-  method="GET"
+  method="GET + POST"
   examples={{
-    curl: `curl -X GET "https://your-panel.com/api/client/servers/d3aac109/files/upload" \\
+    curl: `# Step 1: Get signed upload URL
+signed_url=$(curl -s \\
   -H "Authorization: Bearer ptlc_YOUR_API_KEY" \\
   -H "Accept: Application/vnd.pterodactyl.v1+json" \\
-  -F "files[]=@/path/to/local/file.txt" \\
+  "https://your-panel.com/api/client/servers/d3aac109/files/upload?directory=%2F" \\
+  | jq -r '.attributes.url')
+
+# Step 2: Upload file to signed URL
+curl -X POST "$signed_url" \\
+  -F "files=@/path/to/local/file.txt" \\
   -F "directory=/"`,
     javascript: `const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
 
 const serverId = 'd3aac109';
-const formData = new FormData();
+const directory = '/';
+const filePath = '/path/to/local/file.txt';
 
-// Add file to upload
-formData.append('files[]', fs.createReadStream('/path/to/local/file.txt'));
-formData.append('directory', '/');
-
-const response = await axios.post(
+// Step 1: Get signed upload URL
+const uploadUrlResponse = await axios.get(
   \`https://your-panel.com/api/client/servers/\${serverId}/files/upload\`,
-  formData,
   {
     headers: {
       'Authorization': 'Bearer ptlc_YOUR_API_KEY',
-      'Accept': 'Application/vnd.pterodactyl.v1+json',
-      ...formData.getHeaders()
+      'Accept': 'Application/vnd.pterodactyl.v1+json'
+    },
+    params: {
+      directory: directory
     }
   }
 );
 
+const signedUrl = uploadUrlResponse.data.attributes.url;
+
+// Step 2: Upload file to signed URL
+const formData = new FormData();
+formData.append('files', fs.createReadStream(filePath));
+formData.append('directory', directory);
+
+const uploadResponse = await axios.post(signedUrl, formData, {
+  headers: formData.getHeaders()
+});
+
 console.log('File uploaded successfully');`,
     python: `import requests
+import json
 
 server_id = 'd3aac109'
+directory = '/'
+file_path = '/path/to/local/file.txt'
 
 headers = {
     'Authorization': 'Bearer ptlc_YOUR_API_KEY',
     'Accept': 'Application/vnd.pterodactyl.v1+json'
 }
 
-files = {
-    'files[]': open('/path/to/local/file.txt', 'rb')
-}
+# Step 1: Get signed upload URL
+params = {'directory': directory}
+response = requests.get(
+    f'https://your-panel.com/api/client/servers/{server_id}/files/upload',
+    headers=headers,
+    params=params
+)
+signed_url = response.json()['attributes']['url']
 
-data = {
-    'directory': '/'
-}
+# Step 2: Upload file to signed URL
+with open(file_path, 'rb') as f:
+    files = {'files': f}
+    data = {'directory': directory}
+    upload_response = requests.post(signed_url, files=files, data=data)
 
-response = requests.post(f'https://your-panel.com/api/client/servers/{server_id}/files/upload',
-                        files=files, data=data, headers=headers)
-
-if response.status_code == 200:
+if upload_response.status_code in [200, 204]:
     print('File uploaded successfully')`,
     php: `<?php
 $serverId = 'd3aac109';
+$directory = '/';
+$filePath = '/path/to/local/file.txt';
+
+// Step 1: Get signed upload URL
 $ch = curl_init();
+$url = "https://your-panel.com/api/client/servers/{$serverId}/files/upload?" . 
+       http_build_query(['directory' => $directory]);
 
-$postFields = [
-    'files[]' => new CURLFile('/path/to/local/file.txt'),
-    'directory' => '/'
-];
-
-curl_setopt($ch, CURLOPT_URL, "https://your-panel.com/api/client/servers/{$serverId}/files/upload");
+curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Authorization: Bearer ptlc_YOUR_API_KEY',
     'Accept: Application/vnd.pterodactyl.v1+json'
 ]);
 
 $response = curl_exec($ch);
+$data = json_decode($response, true);
+curl_close($ch);
+
+$signedUrl = $data['attributes']['url'];
+
+// Step 2: Upload file to signed URL
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $signedUrl);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, [
+    'files' => new CURLFile($filePath),
+    'directory' => $directory
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$uploadResponse = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-if ($httpCode === 200) {
+if ($httpCode === 200 || $httpCode === 204) {
     echo "File uploaded successfully\\n";
 }
-?>`
+?>`,
+    go: `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "io"
+    "mime/multipart"
+    "net/http"
+    "net/url"
+    "os"
+    "path/filepath"
+)
+
+func main() {
+    serverId := "d3aac109"
+    directory := "/"
+    filePath := "/path/to/local/file.txt"
+    apiKey := "ptlc_YOUR_API_KEY"
+
+    // Step 1: Get signed upload URL
+    uploadUrl := fmt.Sprintf("https://your-panel.com/api/client/servers/%s/files/upload?directory=%s",
+        serverId, url.QueryEscape(directory))
+    
+    req, _ := http.NewRequest("GET", uploadUrl, nil)
+    req.Header.Set("Authorization", "Bearer " + apiKey)
+    req.Header.Set("Accept", "Application/vnd.pterodactyl.v1+json")
+    
+    client := &http.Client{}
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    var uploadData struct {
+        Attributes struct {
+            URL string \`json:"url"\`
+        } \`json:"attributes"\`
+    }
+    json.NewDecoder(resp.Body).Decode(&uploadData)
+    signedUrl := uploadData.Attributes.URL
+
+    // Step 2: Upload file to signed URL
+    file, _ := os.Open(filePath)
+    defer file.Close()
+
+    body := &bytes.Buffer{}
+    writer := multipart.NewWriter(body)
+    
+    part, _ := writer.CreateFormFile("files", filepath.Base(filePath))
+    io.Copy(part, file)
+    
+    writer.WriteField("directory", directory)
+    writer.Close()
+
+    req, _ = http.NewRequest("POST", signedUrl, body)
+    req.Header.Set("Content-Type", writer.FormDataContentType())
+    
+    resp, _ = client.Do(req)
+    defer resp.Body.Close()
+    
+    if resp.StatusCode == 200 || resp.StatusCode == 204 {
+        fmt.Println("File uploaded successfully")
+    }
+}`,
+    java: `import java.io.*;
+import java.net.*;
+import java.nio.file.*;
+import org.json.*;
+import okhttp3.*;
+
+public class FileUpload {
+    public static void main(String[] args) throws IOException {
+        String serverId = "d3aac109";
+        String directory = "/";
+        String filePath = "/path/to/local/file.txt";
+        String apiKey = "ptlc_YOUR_API_KEY";
+        
+        OkHttpClient client = new OkHttpClient();
+        
+        // Step 1: Get signed upload URL
+        String uploadUrl = String.format(
+            "https://your-panel.com/api/client/servers/%s/files/upload?directory=%s",
+            serverId, URLEncoder.encode(directory, "UTF-8")
+        );
+        
+        Request uploadRequest = new Request.Builder()
+            .url(uploadUrl)
+            .header("Authorization", "Bearer " + apiKey)
+            .header("Accept", "Application/vnd.pterodactyl.v1+json")
+            .build();
+        
+        Response uploadResponse = client.newCall(uploadRequest).execute();
+        JSONObject json = new JSONObject(uploadResponse.body().string());
+        String signedUrl = json.getJSONObject("attributes").getString("url");
+        uploadResponse.close();
+        
+        // Step 2: Upload file to signed URL
+        File file = new File(filePath);
+        RequestBody requestBody = new MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("files", file.getName(),
+                RequestBody.create(MediaType.parse("application/octet-stream"), file))
+            .addFormDataPart("directory", directory)
+            .build();
+        
+        Request fileUploadRequest = new Request.Builder()
+            .url(signedUrl)
+            .post(requestBody)
+            .build();
+        
+        Response fileResponse = client.newCall(fileUploadRequest).execute();
+        if (fileResponse.code() == 200 || fileResponse.code() == 204) {
+            System.out.println("File uploaded successfully");
+        }
+        fileResponse.close();
+    }
+}`,
+    csharp: `using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+
+class FileUpload
+{
+    static async Task Main(string[] args)
+    {
+        string serverId = "d3aac109";
+        string directory = "/";
+        string filePath = "/path/to/local/file.txt";
+        string apiKey = "ptlc_YOUR_API_KEY";
+        
+        using (var client = new HttpClient())
+        {
+            // Step 1: Get signed upload URL
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+            client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+            
+            var uploadUrl = $"https://your-panel.com/api/client/servers/{serverId}/files/upload?directory={Uri.EscapeDataString(directory)}";
+            var uploadResponse = await client.GetStringAsync(uploadUrl);
+            var json = JObject.Parse(uploadResponse);
+            var signedUrl = json["attributes"]["url"].ToString();
+            
+            // Step 2: Upload file to signed URL
+            using (var content = new MultipartFormDataContent())
+            using (var fileStream = File.OpenRead(filePath))
+            {
+                content.Add(new StreamContent(fileStream), "files", Path.GetFileName(filePath));
+                content.Add(new StringContent(directory), "directory");
+                
+                var fileResponse = await client.PostAsync(signedUrl, content);
+                if (fileResponse.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("File uploaded successfully");
+                }
+            }
+        }
+    }
+}`,
+    ruby: `require 'net/http'
+require 'uri'
+require 'json'
+
+server_id = 'd3aac109'
+directory = '/'
+file_path = '/path/to/local/file.txt'
+api_key = 'ptlc_YOUR_API_KEY'
+
+# Step 1: Get signed upload URL
+uri = URI("https://your-panel.com/api/client/servers/#{server_id}/files/upload")
+uri.query = URI.encode_www_form(directory: directory)
+
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(uri)
+request['Authorization'] = "Bearer #{api_key}"
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+
+response = http.request(request)
+data = JSON.parse(response.body)
+signed_url = data['attributes']['url']
+
+# Step 2: Upload file to signed URL
+uri = URI(signed_url)
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+File.open(file_path, 'rb') do |file|
+  request = Net::HTTP::Post::Multipart.new(uri.path, {
+    'files' => UploadIO.new(file, 'application/octet-stream', File.basename(file_path)),
+    'directory' => directory
+  })
+  
+  response = http.request(request)
+  if response.code.to_i == 200 || response.code.to_i == 204
+    puts 'File uploaded successfully'
+  end
+end`
   }}
 />
 
@@ -466,6 +743,164 @@ if ($httpCode === 200) {
 | Maximum file size | 100 MB per file |
 | Maximum files per request | 10 files |
 | Allowed file types | All types (configurable by admin) |
+
+### Multiple File Upload Example
+
+<CodeTabs
+  endpoint="/api/client/servers/{server}/files/upload"
+  method="Multiple Files"
+  examples={{
+    curl: `# Step 1: Get signed upload URL (same as single file)
+signed_url=$(curl -s \\
+  -H "Authorization: Bearer ptlc_YOUR_API_KEY" \\
+  -H "Accept: Application/vnd.pterodactyl.v1+json" \\
+  "https://your-panel.com/api/client/servers/d3aac109/files/upload?directory=%2F" \\
+  | jq -r '.attributes.url')
+
+# Step 2: Upload multiple files to signed URL
+curl -X POST "$signed_url" \\
+  -F "files=@/path/to/file1.txt" \\
+  -F "files=@/path/to/file2.log" \\
+  -F "files=@/path/to/config.yml" \\
+  -F "directory=/"`,
+    javascript: `const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+
+const serverId = 'd3aac109';
+const directory = '/';
+const filePaths = [
+  '/path/to/file1.txt',
+  '/path/to/file2.log',
+  '/path/to/config.yml'
+];
+
+// Step 1: Get signed upload URL
+const uploadUrlResponse = await axios.get(
+  \`https://your-panel.com/api/client/servers/\${serverId}/files/upload\`,
+  {
+    headers: {
+      'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+      'Accept': 'Application/vnd.pterodactyl.v1+json'
+    },
+    params: { directory }
+  }
+);
+
+const signedUrl = uploadUrlResponse.data.attributes.url;
+
+// Step 2: Upload multiple files
+const formData = new FormData();
+
+// Add each file to the form
+filePaths.forEach(filePath => {
+  formData.append('files', fs.createReadStream(filePath));
+});
+
+formData.append('directory', directory);
+
+const uploadResponse = await axios.post(signedUrl, formData, {
+  headers: formData.getHeaders()
+});
+
+console.log('Multiple files uploaded successfully');`,
+    python: `import requests
+
+server_id = 'd3aac109'
+directory = '/'
+file_paths = [
+    '/path/to/file1.txt',
+    '/path/to/file2.log',
+    '/path/to/config.yml'
+]
+
+headers = {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json'
+}
+
+# Step 1: Get signed upload URL
+response = requests.get(
+    f'https://your-panel.com/api/client/servers/{server_id}/files/upload',
+    headers=headers,
+    params={'directory': directory}
+)
+signed_url = response.json()['attributes']['url']
+
+# Step 2: Upload multiple files
+files = []
+for file_path in file_paths:
+    files.append(('files', open(file_path, 'rb')))
+
+data = {'directory': directory}
+upload_response = requests.post(signed_url, files=files, data=data)
+
+# Close file handles
+for _, file_handle in files:
+    file_handle.close()
+
+if upload_response.status_code in [200, 204]:
+    print('Multiple files uploaded successfully')`,
+    php: `<?php
+$serverId = 'd3aac109';
+$directory = '/';
+$filePaths = [
+    '/path/to/file1.txt',
+    '/path/to/file2.log',
+    '/path/to/config.yml'
+];
+
+// Step 1: Get signed upload URL
+$ch = curl_init();
+$url = "https://your-panel.com/api/client/servers/{$serverId}/files/upload?" . 
+       http_build_query(['directory' => $directory]);
+
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Authorization: Bearer ptlc_YOUR_API_KEY',
+    'Accept: Application/vnd.pterodactyl.v1+json'
+]);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+curl_close($ch);
+
+$signedUrl = $data['attributes']['url'];
+
+// Step 2: Upload multiple files
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $signedUrl);
+curl_setopt($ch, CURLOPT_POST, true);
+
+// Build multipart form data with multiple files
+$postFields = ['directory' => $directory];
+foreach ($filePaths as $index => $filePath) {
+    $postFields["files[{$index}]"] = new CURLFile($filePath);
+}
+
+curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$uploadResponse = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+if ($httpCode === 200 || $httpCode === 204) {
+    echo "Multiple files uploaded successfully\\n";
+}
+?>`
+  }}
+/>
+
+### Important Notes
+
+- **Signed URL Validity**: The signed URL is valid for 15 minutes (verified from source code)
+- **Directory Parameter**: Must be URL-encoded when used in the query string
+- **Form Field Name**: Must use `files` as the field name for each file
+- **Multiple Files**: Supported by adding multiple `files` fields in the form data
+- **Folder Uploads**: **NOT SUPPORTED** - Pterodactyl does not support uploading entire folders. You must upload individual files
+- **File Permissions**: Uploaded files are created with 0644 permissions (read/write for owner, read-only for others)
 
 ---
 
