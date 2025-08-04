@@ -869,11 +869,10 @@ curl_close($ch);
 $signedUrl = $data['attributes']['url'];
 
 // Step 2: Upload multiple files
-// Note: PHP's cURL doesn't support multiple values for the same field name
-// in the same way as other languages. Each file needs to be uploaded
-// separately or use a custom multipart body builder.
+// Note: PHP cURL limitation - cannot use the same field name multiple times
+// in an associative array. Common workarounds:
 
-// Option 1: Upload files one by one
+// Option 1: Multiple separate uploads (most reliable)
 foreach ($filePaths as $filePath) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $signedUrl);
@@ -896,32 +895,13 @@ foreach ($filePaths as $filePath) {
 
 echo "Files uploaded successfully\\n";
 
-// Option 2: Use Guzzle for better multipart support
-// composer require guzzlehttp/guzzle
+// Option 2: Check if your panel accepts array notation
+// Some implementations may accept files[0], files[1], etc.
 /*
-use GuzzleHttp\\Client;
-use GuzzleHttp\\Psr7;
-
-$client = new Client();
-
-// Get signed URL (same as above)...
-
-$multipart = [];
-foreach ($filePaths as $filePath) {
-    $multipart[] = [
-        'name' => 'files',
-        'contents' => Psr7\\Utils::tryFopen($filePath, 'r'),
-        'filename' => basename($filePath)
-    ];
+$postFields = ['directory' => $directory];
+foreach ($filePaths as $index => $filePath) {
+    $postFields["files[{$index}]"] = new CURLFile($filePath);
 }
-$multipart[] = [
-    'name' => 'directory',
-    'contents' => $directory
-];
-
-$response = $client->post($signedUrl, [
-    'multipart' => $multipart
-]);
 */
 ?>`
   }}
