@@ -1120,6 +1120,12 @@ GET /api/application/nodes/{node}/configuration
 
 This endpoint returns the complete Wings configuration that should be placed in the Wings configuration file.
 
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `node` | integer | Node ID |
+
 ### Example Request
 
 
@@ -1147,9 +1153,136 @@ const response = await axios.get(`https://your-panel.com/api/application/nodes/$
 
 console.log(response.data);
 ```
+</TabItem>
 
+<TabItem value="python" label="Python">
+```python
+import requests
 
+node_id = 1
+headers = {
+    'Authorization': 'Bearer ptla_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json'
+}
 
+response = requests.get(f'https://your-panel.com/api/application/nodes/{node_id}/configuration', 
+                       headers=headers)
+print(response.json())
+```
+</TabItem>
+
+<TabItem value="php" label="PHP">
+```php
+<?php
+$client = new GuzzleHttp\Client();
+$nodeId = 1;
+
+$response = $client->get("https://your-panel.com/api/application/nodes/{$nodeId}/configuration", [
+    'headers' => [
+        'Authorization' => 'Bearer ptla_YOUR_API_KEY',
+        'Accept' => 'Application/vnd.pterodactyl.v1+json'
+    ]
+]);
+
+$data = json_decode($response->getBody(), true);
+print_r($data);
+?>
+```
+</TabItem>
+
+<TabItem value="go" label="Go">
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    nodeId := 1
+    url := fmt.Sprintf("https://your-panel.com/api/application/nodes/%d/configuration", nodeId)
+    
+    client := &http.Client{}
+    req, _ := http.NewRequest("GET", url, nil)
+    req.Header.Add("Authorization", "Bearer ptla_YOUR_API_KEY")
+    req.Header.Add("Accept", "Application/vnd.pterodactyl.v1+json")
+    
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+    fmt.Println(result)
+}
+```
+</TabItem>
+
+<TabItem value="java" label="Java">
+```java
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+int nodeId = 1;
+String url = String.format("https://your-panel.com/api/application/nodes/%d/configuration", nodeId);
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create(url))
+    .header("Authorization", "Bearer ptla_YOUR_API_KEY")
+    .header("Accept", "Application/vnd.pterodactyl.v1+json")
+    .GET()
+    .build();
+
+HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+</TabItem>
+
+<TabItem value="csharp" label="C#">
+```csharp
+using System.Net.Http;
+using System.Threading.Tasks;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ptla_YOUR_API_KEY");
+client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+
+int nodeId = 1;
+var response = await client.GetAsync($"https://your-panel.com/api/application/nodes/{nodeId}/configuration");
+var content = await response.Content.ReadAsStringAsync();
+Console.WriteLine(content);
+```
+</TabItem>
+
+<TabItem value="ruby" label="Ruby">
+```ruby
+require 'net/http'
+require 'json'
+
+node_id = 1
+uri = URI("https://your-panel.com/api/application/nodes/#{node_id}/configuration")
+
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(uri)
+request['Authorization'] = 'Bearer ptla_YOUR_API_KEY'
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+
+response = http.request(request)
+puts JSON.parse(response.body)
+```
+</TabItem>
+
+</Tabs>
+
+### Response
+
+Returns HTTP 200 OK with the Wings configuration.
 
 ### Example Response
 
@@ -1384,16 +1517,16 @@ DELETE /api/application/nodes/{node}
 
 ### Example Request
 
-
-
+<Tabs>
+<TabItem value="curl" label="cURL">
 ```bash
 curl -X DELETE "https://your-panel.com/api/application/nodes/2" \
   -H "Authorization: Bearer ptla_YOUR_API_KEY" \
   -H "Accept: Application/vnd.pterodactyl.v1+json"
 ```
+</TabItem>
 
-
-
+<TabItem value="javascript" label="JavaScript">
 ```javascript
 const axios = require('axios');
 

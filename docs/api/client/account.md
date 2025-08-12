@@ -167,7 +167,8 @@ curl "https://your-panel.com/api/client/account/two-factor" \
 ```json
 {
   "data": {
-    "image_url_data": "otpauth://totp/Pterodactyl:user%40example.com?secret=LGYOWJEGVRPPGPWATP5ZHOYC7DHAYQ6S&issuer=Pterodactyl"
+    "image_url_data": "otpauth://totp/Pterodactyl:admin%40example.com?secret=XHL4JKY746CH46YJCHA25JWAUDBAM24I&issuer=Pterodactyl",
+    "secret": "XHL4JKY746CH46YJCHA25JWAUDBAM24I"
   }
 }
 ```

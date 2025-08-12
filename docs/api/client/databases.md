@@ -105,16 +105,8 @@ func main() {
         },
         "name": "s4_gamedata",
         "username": "u4_gKGSzC8x9M",
-        "remote": "%",
-        "max_connections": 0,
-        "relationships": {
-          "password": {
-            "object": "database_password",
-            "attributes": {
-              "password": "aP$9gH#x2Kw8"
-            }
-          }
-        }
+        "connections_from": "%",
+        "max_connections": 0
       }
     },
     {
@@ -127,16 +119,8 @@ func main() {
         },
         "name": "s4_website",
         "username": "u4_hN7jL4mP6Q",
-        "remote": "127.0.0.1",
-        "max_connections": 10,
-        "relationships": {
-          "password": {
-            "object": "database_password",
-            "attributes": {
-              "password": "xR$7nM#k9Lp3"
-            }
-          }
-        }
+        "connections_from": "127.0.0.1",
+        "max_connections": 10
       }
     }
   ]

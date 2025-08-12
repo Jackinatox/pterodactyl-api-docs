@@ -99,7 +99,7 @@ print_r($data['data']);
       "attributes": {
         "name": "server.jar",
         "mode": "-rw-r--r--",
-        "mode_bits": "0644",
+        "mode_bits": "644",
         "size": 47698923,
         "is_file": true,
         "is_symlink": false,
@@ -113,7 +113,7 @@ print_r($data['data']);
       "attributes": {
         "name": "logs",
         "mode": "drwxr-xr-x",
-        "mode_bits": "0755",
+        "mode_bits": "755",
         "size": 4096,
         "is_file": false,
         "is_symlink": false,
@@ -127,7 +127,7 @@ print_r($data['data']);
       "attributes": {
         "name": "world",
         "mode": "drwxr-xr-x",
-        "mode_bits": "0755",
+        "mode_bits": "755",
         "size": 4096,
         "is_file": false,
         "is_symlink": false,
