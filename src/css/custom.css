@@ -269,18 +269,23 @@ code {
   color: white !important;
 }
 
-[data-theme='dark'] .menu__list-item .menu__link {
-  color: #cbd5e1 !important; /* Slightly darker for hierarchy */
+[data-theme='dark'] .menu__list-item:not(.menu__list-item-collapsible) .menu__link {
+  color: #cbd5e1 !important; /* Slightly darker for hierarchy - but not dropdowns */
 }
 
-[data-theme='dark'] .menu__list-item .menu__link:hover {
+[data-theme='dark'] .menu__list-item:not(.menu__list-item-collapsible) .menu__link:hover {
   color: #f1f5f9 !important; /* Brighter on hover for better contrast */
+}
+
+/* Ensure dropdown headers stay bright */
+[data-theme='dark'] .menu__list-item-collapsible > .menu__link {
+  color: #f1f5f9 !important;
 }
 
 /* Additional contrast for category labels */
 .menu__list-item-collapsible .menu__link {
   font-weight: 600;
-  color: #94a3b8 !important;  /* Darker color for dropdown headers */
+  color: #f1f5f9 !important;  /* Same as regular menu items */
 }
 
 /* Ensure proper contrast for nested items */
@@ -563,12 +568,38 @@ html[data-theme='dark'] .menu__list-item:not(.menu__list-item-collapsible) .menu
 
 /* Restore proper styling for collapsible/dropdown category headers in dark mode */
 html[data-theme='dark'] .menu__list-item-collapsible .menu__link {
-  color: #94a3b8 !important;  /* Darker grey for better distinction */
+  color: #f1f5f9 !important;  /* Same as regular menu items */
   background-color: transparent !important;
   font-weight: 600 !important;
 }
 
 html[data-theme='dark'] .menu__list-item-collapsible .menu__link:hover {
-  color: #cbd5e1 !important;  /* Lighter on hover */
+  color: #f1f5f9 !important;  /* Keep same color on hover */
   background-color: rgba(51, 65, 85, 0.5) !important;  /* Subtle background on hover */
+}
+
+/* Fix dropdown arrow visibility - using Unicode arrow only */
+.menu__caret::after {
+  content: '▶';
+  color: #f1f5f9;
+  font-size: 0.6rem;
+  transition: transform 0.2s;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Rotate arrow when expanded */
+.menu__list-item:not(.menu__list-item--collapsed) .menu__caret::after {
+  transform: rotate(90deg);
+}
+
+/* Ensure dark mode visibility */
+html[data-theme='dark'] .menu__caret::after {
+  color: #f1f5f9 !important;
+}
+
+/* Hover state */
+html[data-theme='dark'] .menu__list-item-collapsible:hover .menu__caret::after {
+  color: #f1f5f9 !important;
+  opacity: 1;
 }
