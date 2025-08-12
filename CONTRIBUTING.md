@@ -101,13 +101,6 @@ When adding or updating code examples:
 - **Error Handling**: Show proper error handling where relevant
 - **Security**: Emphasize security best practices
 
-### File Structure
-
-- **Client API**: `/docs/api/client/` - User-facing API endpoints
-- **Application API**: `/docs/api/application/` - Admin API endpoints  
-- **WebSocket API**: `/docs/api/websocket.md` - Real-time connections
-- **Guides**: `/docs/` - General guides and concepts
-
 ## 🔧 Development Setup
 
 ### Prerequisites
@@ -134,9 +127,7 @@ npm run validate:codetabs
 
 ### Testing
 - Verify some code examples before submitting
-- Verify responsive design on different screen sizes
 - Check that internal links work correctly
-- Ensure search functionality works with new content
 
 ## 🎨 Style Guide
 
@@ -166,21 +157,8 @@ Each endpoint should include:
 
 ### Getting Help
 - **Questions**: Use [GitHub Discussions](https://github.com/netvpx/pterodactyl-api-docs/discussions)
-- **Pterodactyl Chat**: Join the [Pterodactyl Discord](https://discord.gg/pterodactyl)
-- **NETVPX Support**: [Contact us](https://netvpx.com/support) for hosting-related questions
-
-## 📋 Pull Request Checklist
-
-Before submitting your PR, ensure:
-
-- [ ] The code examples are working
-- [ ] Multi-language examples are consistent (all 8 languages)
-- [ ] CodeTabs component is used for all API examples
-- [ ] Documentation builds without errors (`npm run build`)
-- [ ] CodeTabs validation passes (`npm run validate:codetabs`)
-- [ ] Links are working and point to correct locations
-- [ ] New content follows existing style and format
-- [ ] Changes are focused and related to a single improvement
+- **Pterodactyl Chat**: Join the [Pterodactyl Discord](https://discord.gg/pterodactyl) which has a [dedicated API & Modding channel](https://discord.com/channels/122900397965705216/936744899787784282)
+- **NETVPX Support**: [Contact us](https://netvpx.com/support) for other questionst
 
 ## 🚀 Release Process
 
