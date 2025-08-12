@@ -7,15 +7,15 @@
  * Professional and corporate appearance
  */
 
-/* Light mode */
+/* Dark mode only - removed light mode for maintainability */
 :root {
-  --ifm-color-primary: #1a365d;
-  --ifm-color-primary-dark: #153955;
-  --ifm-color-primary-darker: #133650;
-  --ifm-color-primary-darkest: #0f2a42;
-  --ifm-color-primary-light: #1f4365;
-  --ifm-color-primary-lighter: #21476a;
-  --ifm-color-primary-lightest: #285a7a;
+  --ifm-color-primary: #2d7dd2;
+  --ifm-color-primary-dark: #2563eb;
+  --ifm-color-primary-darker: #1d4ed8;
+  --ifm-color-primary-darkest: #1e40af;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
   
   /* Secondary and status colors */
   --ifm-color-secondary: #2d7dd2;
@@ -25,29 +25,29 @@
   --ifm-color-danger: #ef4444;
   
   /* Background colors */
-  --ifm-background-color: #ffffff;
-  --ifm-background-surface-color: #f8fafc;
+  --ifm-background-color: #0f172a;
+  --ifm-background-surface-color: #1e293b;
   
   /* Content colors - improved contrast */
-  --ifm-color-content: #1a202c;
-  --ifm-color-content-secondary: #4a5568;
+  --ifm-color-content: #f1f5f9;
+  --ifm-color-content-secondary: #cbd5e1;
   
   /* Border and divider colors */
-  --ifm-color-emphasis-100: #f7fafc;
-  --ifm-color-emphasis-200: #edf2f7;
-  --ifm-color-emphasis-300: #e2e8f0;
-  --ifm-color-emphasis-400: #cbd5e0;
+  --ifm-color-emphasis-100: #334155;
+  --ifm-color-emphasis-200: #475569;
+  --ifm-color-emphasis-300: #64748b;
+  --ifm-color-emphasis-400: #94a3b8;
   
   /* Link colors */
-  --ifm-link-color: #1a365d;
-  --ifm-link-hover-color: #2d7dd2;
+  --ifm-link-color: #60a5fa;
+  --ifm-link-hover-color: #93c5fd;
   
   /* Code block colors */
-  --ifm-code-background: #f7fafc;
-  --ifm-code-color: #2d3748;
+  --ifm-code-background: #1e293b;
+  --ifm-code-color: #e2e8f0;
 }
 
-/* Dark mode */
+/* Keep dark theme specific overrides for Docusaurus compatibility */
 [data-theme='dark'] {
   --ifm-color-primary: #2d7dd2;
   --ifm-color-primary-dark: #2563eb;
@@ -248,37 +248,15 @@ code {
   color: white !important;
 }
 
-/* Light mode specific overrides - Enhanced contrast */
-:root .menu__link {
-  color: #1a202c !important; /* Dark text for light background */
+/* Menu link styling for dark mode */
+.menu__link {
+  color: #f1f5f9 !important; /* Light text for dark background */
 }
 
-:root .menu__link--active {
+.menu__link--active {
   background-color: var(--ifm-color-primary) !important;
   color: white !important;
   font-weight: 600 !important;
-}
-
-/* Higher specificity for active links in light mode */
-:root .menu__list-item .menu__link--active {
-  background-color: var(--ifm-color-primary) !important;
-  color: white !important;
-  font-weight: 600 !important;
-}
-
-/* Nested menu active links */
-:root .menu__list .menu__list .menu__link--active {
-  background-color: var(--ifm-color-primary) !important;
-  color: white !important;
-  font-weight: 600 !important;
-}
-
-:root .menu__list-item .menu__link {
-  color: #4a5568 !important; /* Slightly lighter for hierarchy */
-}
-
-:root .menu__list-item .menu__link:hover {
-  color: #1a202c !important; /* Darker on hover for better contrast */
 }
 
 /* Dark mode specific overrides */
@@ -529,13 +507,11 @@ code {
   font-weight: 400;
 }
 
-/* Ensure hero elements are visible in both themes */
-[data-theme='light'] .hero--primary .hero__title,
+/* Ensure hero elements are visible in dark theme */
 [data-theme='dark'] .hero--primary .hero__title {
   color: #ffffff !important;
 }
 
-[data-theme='light'] .hero--primary .hero__subtitle,
 [data-theme='dark'] .hero--primary .hero__subtitle {
   color: rgba(255, 255, 255, 0.95) !important;
 }
@@ -570,23 +546,7 @@ code {
   --ifm-menu-color-background-active: var(--ifm-color-primary);
 }
 
-/* Force proper styling for active sidebar items in light mode - ONLY for actual page links */
-html[data-theme='light'] .menu__link--active:not(.menu__link--sublist),
-html[data-theme='light'] .menu__list-item:not(.menu__list-item-collapsible) .menu__link--active {
-  background-color: var(--ifm-color-primary) !important;
-  color: #ffffff !important;
-  font-weight: 600 !important;
-  border-radius: 6px !important;
-}
-
-/* Ensure hover states don't override active styles in light mode - ONLY for actual page links */
-html[data-theme='light'] .menu__link--active:not(.menu__link--sublist):hover,
-html[data-theme='light'] .menu__list-item:not(.menu__list-item-collapsible) .menu__link--active:hover {
-  background-color: var(--ifm-color-primary-dark) !important;
-  color: #ffffff !important;
-}
-
-/* Dark mode equivalents for consistency - ONLY for actual page links */
+/* Force proper styling for active sidebar items in dark mode - ONLY for actual page links */
 html[data-theme='dark'] .menu__link--active:not(.menu__link--sublist),
 html[data-theme='dark'] .menu__list-item:not(.menu__list-item-collapsible) .menu__link--active {
   background-color: var(--ifm-color-primary) !important;
@@ -599,18 +559,6 @@ html[data-theme='dark'] .menu__link--active:not(.menu__link--sublist):hover,
 html[data-theme='dark'] .menu__list-item:not(.menu__list-item-collapsible) .menu__link--active:hover {
   background-color: var(--ifm-color-primary-dark) !important;
   color: #ffffff !important;
-}
-
-/* Restore proper styling for collapsible/dropdown category headers in light mode */
-html[data-theme='light'] .menu__list-item-collapsible .menu__link {
-  color: var(--ifm-color-content) !important;
-  background-color: transparent !important;
-  font-weight: 600 !important;
-}
-
-html[data-theme='light'] .menu__list-item-collapsible .menu__link:hover {
-  color: var(--ifm-color-content) !important;
-  background-color: var(--ifm-color-emphasis-100) !important;
 }
 
 /* Restore proper styling for collapsible/dropdown category headers in dark mode */
