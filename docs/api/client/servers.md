@@ -355,15 +355,21 @@ func main() {
     "internal_id": 4,
     "uuid": "d3aac109-e5e0-4331-b03e-3454f7e136dc",
     "name": "Survival Server",
-    "description": "A vanilla Minecraft survival server",
-    "status": "running",
-    "is_suspended": false,
-    "is_installing": false,
-    "is_transferring": false,
     "node": "Node 1",
+    "is_node_under_maintenance": false,
     "sftp_details": {
       "ip": "node.example.com",
       "port": 2022
+    },
+    "description": "A vanilla Minecraft survival server",
+    "limits": {
+      "memory": 1024,
+      "swap": 0,
+      "disk": 5120,
+      "io": 500,
+      "cpu": 200,
+      "threads": null,
+      "oom_disabled": true
     },
     "invocation": "java -Xms128M -Xmx1024M -jar server.jar",
     "docker_image": "ghcr.io/pterodactyl/yolks:java_17",
@@ -377,20 +383,26 @@ func main() {
       "allocations": 1,
       "backups": 10
     },
-    "user_permissions": [
-      "control.console",
-      "control.start",
-      "control.stop",
-      "control.restart"
-    ],
-    "limits": {
-      "memory": 1024,
-      "swap": 0,
-      "disk": 5120,
-      "io": 500,
-      "cpu": 200,
-      "threads": null
+    "status": "running",
+    "is_suspended": false,
+    "is_installing": false,
+    "is_transferring": false,
+    "relationships": {
+      "allocations": {
+        "object": "list",
+        "data": []
+      },
+      "variables": {
+        "object": "list",
+        "data": []
+      }
     }
+  },
+  "meta": {
+    "is_server_owner": true,
+    "user_permissions": [
+      "*"
+    ]
   }
 }
 ```
