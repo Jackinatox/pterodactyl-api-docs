@@ -1347,6 +1347,778 @@ Returns empty response body with status code 204.
 
 ---
 
+## Rename File
+
+Rename a file or directory on the server.
+
+**`PUT /api/client/servers/{server}/files/rename`**
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `root` | string | Yes | Directory containing the file |
+| `files` | array | Yes | Array containing old and new names |
+
+### Example Request
+
+<CodeTabs
+  endpoint="/api/client/servers/{server}/files/rename"
+  method="PUT"
+  examples={{
+    curl: `curl -X PUT "https://your-panel.com/api/client/servers/d3aac109/files/rename" \\
+  -H "Authorization: Bearer ptlc_YOUR_API_KEY" \\
+  -H "Accept: Application/vnd.pterodactyl.v1+json" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "root": "/",
+    "files": [
+      {
+        "from": "old-name.txt",
+        "to": "new-name.txt"
+      }
+    ]
+  }'`,
+    javascript: `const axios = require('axios');
+
+const serverId = 'd3aac109';
+const renameData = {
+  root: '/',
+  files: [
+    {
+      from: 'old-name.txt',
+      to: 'new-name.txt'
+    }
+  ]
+};
+
+const response = await axios.put(\`https://your-panel.com/api/client/servers/\${serverId}/files/rename\`, renameData, {
+  headers: {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json',
+    'Content-Type': 'application/json'
+  }
+});
+
+console.log('File renamed successfully');`,
+    python: `import requests
+
+server_id = 'd3aac109'
+headers = {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json',
+    'Content-Type': 'application/json'
+}
+
+rename_data = {
+    'root': '/',
+    'files': [
+        {
+            'from': 'old-name.txt',
+            'to': 'new-name.txt'
+        }
+    ]
+}
+
+response = requests.put(f'https://your-panel.com/api/client/servers/{server_id}/files/rename', 
+                        headers=headers, json=rename_data)
+print('File renamed successfully')`,
+    php: `<?php
+$serverId = 'd3aac109';
+$client = new GuzzleHttp\\Client();
+
+$renameData = [
+    'root' => '/',
+    'files' => [
+        [
+            'from' => 'old-name.txt',
+            'to' => 'new-name.txt'
+        ]
+    ]
+];
+
+$response = $client->put("https://your-panel.com/api/client/servers/{$serverId}/files/rename", [
+    'headers' => [
+        'Authorization' => 'Bearer ptlc_YOUR_API_KEY',
+        'Accept' => 'Application/vnd.pterodactyl.v1+json',
+        'Content-Type' => 'application/json'
+    ],
+    'json' => $renameData
+]);
+
+echo "File renamed successfully";
+?>`,
+    go: `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    serverId := "d3aac109"
+    renameData := map[string]interface{}{
+        "root": "/",
+        "files": []map[string]string{
+            {
+                "from": "old-name.txt",
+                "to": "new-name.txt",
+            },
+        },
+    }
+    
+    jsonData, _ := json.Marshal(renameData)
+    
+    client := &http.Client{}
+    req, _ := http.NewRequest("PUT", fmt.Sprintf("https://your-panel.com/api/client/servers/%s/files/rename", serverId), bytes.NewBuffer(jsonData))
+    req.Header.Add("Authorization", "Bearer ptlc_YOUR_API_KEY")
+    req.Header.Add("Accept", "Application/vnd.pterodactyl.v1+json")
+    req.Header.Add("Content-Type", "application/json")
+    
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    fmt.Println("File renamed successfully")
+}`,
+    java: `import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+String serverId = "d3aac109";
+String jsonData = """
+{
+  "root": "/",
+  "files": [
+    {
+      "from": "old-name.txt",
+      "to": "new-name.txt"
+    }
+  ]
+}
+""";
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://your-panel.com/api/client/servers/" + serverId + "/files/rename"))
+    .header("Authorization", "Bearer ptlc_YOUR_API_KEY")
+    .header("Accept", "Application/vnd.pterodactyl.v1+json")
+    .header("Content-Type", "application/json")
+    .PUT(HttpRequest.BodyPublishers.ofString(jsonData))
+    .build();
+
+HttpResponse<String> response = client.send(request, 
+    HttpResponse.BodyHandlers.ofString());
+System.out.println("File renamed successfully");`,
+    csharp: `using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+var serverId = "d3aac109";
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ptlc_YOUR_API_KEY");
+client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+
+var renameData = new {
+    root = "/",
+    files = new[] {
+        new { from = "old-name.txt", to = "new-name.txt" }
+    }
+};
+
+var json = JsonSerializer.Serialize(renameData);
+var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+var response = await client.PutAsync($"https://your-panel.com/api/client/servers/{serverId}/files/rename", content);
+Console.WriteLine("File renamed successfully");`,
+    ruby: `require 'net/http'
+require 'json'
+
+server_id = 'd3aac109'
+rename_data = {
+  root: '/',
+  files: [
+    {
+      from: 'old-name.txt',
+      to: 'new-name.txt'
+    }
+  ]
+}
+
+uri = URI("https://your-panel.com/api/client/servers/#{server_id}/files/rename")
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Put.new(uri)
+request['Authorization'] = 'Bearer ptlc_YOUR_API_KEY'
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+request['Content-Type'] = 'application/json'
+request.body = rename_data.to_json
+
+response = http.request(request)
+puts "File renamed successfully"`
+  }}
+/>
+
+### Success Response (204)
+
+Returns empty response body with status code 204.
+
+---
+
+## Copy File
+
+Copy files to another location on the server.
+
+**`POST /api/client/servers/{server}/files/copy`**
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `location` | string | Yes | Source file path |
+
+### Example Request
+
+<CodeTabs
+  endpoint="/api/client/servers/{server}/files/copy"
+  method="POST"
+  examples={{
+    curl: `curl -X POST "https://your-panel.com/api/client/servers/d3aac109/files/copy" \\
+  -H "Authorization: Bearer ptlc_YOUR_API_KEY" \\
+  -H "Accept: Application/vnd.pterodactyl.v1+json" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "location": "/config.yml"
+  }'`,
+    javascript: `const axios = require('axios');
+
+const serverId = 'd3aac109';
+const copyData = {
+  location: '/config.yml'
+};
+
+const response = await axios.post(\`https://your-panel.com/api/client/servers/\${serverId}/files/copy\`, copyData, {
+  headers: {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json',
+    'Content-Type': 'application/json'
+  }
+});
+
+console.log('File copied successfully');`,
+    python: `import requests
+
+server_id = 'd3aac109'
+headers = {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json',
+    'Content-Type': 'application/json'
+}
+
+copy_data = {
+    'location': '/config.yml'
+}
+
+response = requests.post(f'https://your-panel.com/api/client/servers/{server_id}/files/copy', 
+                        headers=headers, json=copy_data)
+print('File copied successfully')`,
+    php: `<?php
+$serverId = 'd3aac109';
+$client = new GuzzleHttp\\Client();
+
+$copyData = [
+    'location' => '/config.yml'
+];
+
+$response = $client->post("https://your-panel.com/api/client/servers/{$serverId}/files/copy", [
+    'headers' => [
+        'Authorization' => 'Bearer ptlc_YOUR_API_KEY',
+        'Accept' => 'Application/vnd.pterodactyl.v1+json',
+        'Content-Type' => 'application/json'
+    ],
+    'json' => $copyData
+]);
+
+echo "File copied successfully";
+?>`,
+    go: `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    serverId := "d3aac109"
+    copyData := map[string]interface{}{
+        "location": "/config.yml",
+    }
+    
+    jsonData, _ := json.Marshal(copyData)
+    
+    client := &http.Client{}
+    req, _ := http.NewRequest("POST", fmt.Sprintf("https://your-panel.com/api/client/servers/%s/files/copy", serverId), bytes.NewBuffer(jsonData))
+    req.Header.Add("Authorization", "Bearer ptlc_YOUR_API_KEY")
+    req.Header.Add("Accept", "Application/vnd.pterodactyl.v1+json")
+    req.Header.Add("Content-Type", "application/json")
+    
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    fmt.Println("File copied successfully")
+}`,
+    java: `import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+String serverId = "d3aac109";
+String jsonData = """
+{
+  "location": "/config.yml"
+}
+""";
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://your-panel.com/api/client/servers/" + serverId + "/files/copy"))
+    .header("Authorization", "Bearer ptlc_YOUR_API_KEY")
+    .header("Accept", "Application/vnd.pterodactyl.v1+json")
+    .header("Content-Type", "application/json")
+    .POST(HttpRequest.BodyPublishers.ofString(jsonData))
+    .build();
+
+HttpResponse<String> response = client.send(request, 
+    HttpResponse.BodyHandlers.ofString());
+System.out.println("File copied successfully");`,
+    csharp: `using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+var serverId = "d3aac109";
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ptlc_YOUR_API_KEY");
+client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+
+var copyData = new {
+    location = "/config.yml"
+};
+
+var json = JsonSerializer.Serialize(copyData);
+var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+var response = await client.PostAsync($"https://your-panel.com/api/client/servers/{serverId}/files/copy", content);
+Console.WriteLine("File copied successfully");`,
+    ruby: `require 'net/http'
+require 'json'
+
+server_id = 'd3aac109'
+copy_data = {
+  location: '/config.yml'
+}
+
+uri = URI("https://your-panel.com/api/client/servers/#{server_id}/files/copy")
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(uri)
+request['Authorization'] = 'Bearer ptlc_YOUR_API_KEY'
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+request['Content-Type'] = 'application/json'
+request.body = copy_data.to_json
+
+response = http.request(request)
+puts "File copied successfully"`
+  }}
+/>
+
+### Success Response (204)
+
+Returns empty response body with status code 204. The file will be copied with "_copy" appended to the filename.
+
+---
+
+## Delete Files
+
+Delete one or more files or directories.
+
+**`POST /api/client/servers/{server}/files/delete`**
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `root` | string | Yes | Base directory path |
+| `files` | array | Yes | Array of files/directories to delete |
+
+### Example Request
+
+<CodeTabs
+  endpoint="/api/client/servers/{server}/files/delete"
+  method="POST"
+  examples={{
+    curl: `curl -X POST "https://your-panel.com/api/client/servers/d3aac109/files/delete" \\
+  -H "Authorization: Bearer ptlc_YOUR_API_KEY" \\
+  -H "Accept: Application/vnd.pterodactyl.v1+json" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "root": "/",
+    "files": ["old-file.txt", "temp-folder"]
+  }'`,
+    javascript: `const axios = require('axios');
+
+const serverId = 'd3aac109';
+const deleteData = {
+  root: '/',
+  files: ['old-file.txt', 'temp-folder']
+};
+
+const response = await axios.post(\`https://your-panel.com/api/client/servers/\${serverId}/files/delete\`, deleteData, {
+  headers: {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json',
+    'Content-Type': 'application/json'
+  }
+});
+
+console.log('Files deleted successfully');`,
+    python: `import requests
+
+server_id = 'd3aac109'
+headers = {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json',
+    'Content-Type': 'application/json'
+}
+
+delete_data = {
+    'root': '/',
+    'files': ['old-file.txt', 'temp-folder']
+}
+
+response = requests.post(f'https://your-panel.com/api/client/servers/{server_id}/files/delete', 
+                        headers=headers, json=delete_data)
+print('Files deleted successfully')`,
+    php: `<?php
+$serverId = 'd3aac109';
+$client = new GuzzleHttp\\Client();
+
+$deleteData = [
+    'root' => '/',
+    'files' => ['old-file.txt', 'temp-folder']
+];
+
+$response = $client->post("https://your-panel.com/api/client/servers/{$serverId}/files/delete", [
+    'headers' => [
+        'Authorization' => 'Bearer ptlc_YOUR_API_KEY',
+        'Accept' => 'Application/vnd.pterodactyl.v1+json',
+        'Content-Type' => 'application/json'
+    ],
+    'json' => $deleteData
+]);
+
+echo "Files deleted successfully";
+?>`,
+    go: `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    serverId := "d3aac109"
+    deleteData := map[string]interface{}{
+        "root": "/",
+        "files": []string{"old-file.txt", "temp-folder"},
+    }
+    
+    jsonData, _ := json.Marshal(deleteData)
+    
+    client := &http.Client{}
+    req, _ := http.NewRequest("POST", fmt.Sprintf("https://your-panel.com/api/client/servers/%s/files/delete", serverId), bytes.NewBuffer(jsonData))
+    req.Header.Add("Authorization", "Bearer ptlc_YOUR_API_KEY")
+    req.Header.Add("Accept", "Application/vnd.pterodactyl.v1+json")
+    req.Header.Add("Content-Type", "application/json")
+    
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    fmt.Println("Files deleted successfully")
+}`,
+    java: `import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+String serverId = "d3aac109";
+String jsonData = """
+{
+  "root": "/",
+  "files": ["old-file.txt", "temp-folder"]
+}
+""";
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://your-panel.com/api/client/servers/" + serverId + "/files/delete"))
+    .header("Authorization", "Bearer ptlc_YOUR_API_KEY")
+    .header("Accept", "Application/vnd.pterodactyl.v1+json")
+    .header("Content-Type", "application/json")
+    .POST(HttpRequest.BodyPublishers.ofString(jsonData))
+    .build();
+
+HttpResponse<String> response = client.send(request, 
+    HttpResponse.BodyHandlers.ofString());
+System.out.println("Files deleted successfully");`,
+    csharp: `using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+var serverId = "d3aac109";
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ptlc_YOUR_API_KEY");
+client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+
+var deleteData = new {
+    root = "/",
+    files = new[] { "old-file.txt", "temp-folder" }
+};
+
+var json = JsonSerializer.Serialize(deleteData);
+var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+var response = await client.PostAsync($"https://your-panel.com/api/client/servers/{serverId}/files/delete", content);
+Console.WriteLine("Files deleted successfully");`,
+    ruby: `require 'net/http'
+require 'json'
+
+server_id = 'd3aac109'
+delete_data = {
+  root: '/',
+  files: ['old-file.txt', 'temp-folder']
+}
+
+uri = URI("https://your-panel.com/api/client/servers/#{server_id}/files/delete")
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(uri)
+request['Authorization'] = 'Bearer ptlc_YOUR_API_KEY'
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+request['Content-Type'] = 'application/json'
+request.body = delete_data.to_json
+
+response = http.request(request)
+puts "Files deleted successfully"`
+  }}
+/>
+
+### Success Response (204)
+
+Returns empty response body with status code 204.
+
+:::warning Important
+Deleted files cannot be recovered. Always create backups before deleting important files.
+:::
+
+---
+
+## Create Folder
+
+Create a new directory on the server.
+
+**`POST /api/client/servers/{server}/files/create-folder`**
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `root` | string | Yes | Parent directory path |
+| `name` | string | Yes | Name of the new folder |
+
+### Example Request
+
+<CodeTabs
+  endpoint="/api/client/servers/{server}/files/create-folder"
+  method="POST"
+  examples={{
+    curl: `curl -X POST "https://your-panel.com/api/client/servers/d3aac109/files/create-folder" \\
+  -H "Authorization: Bearer ptlc_YOUR_API_KEY" \\
+  -H "Accept: Application/vnd.pterodactyl.v1+json" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "root": "/",
+    "name": "new-folder"
+  }'`,
+    javascript: `const axios = require('axios');
+
+const serverId = 'd3aac109';
+const folderData = {
+  root: '/',
+  name: 'new-folder'
+};
+
+const response = await axios.post(\`https://your-panel.com/api/client/servers/\${serverId}/files/create-folder\`, folderData, {
+  headers: {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json',
+    'Content-Type': 'application/json'
+  }
+});
+
+console.log('Folder created successfully');`,
+    python: `import requests
+
+server_id = 'd3aac109'
+headers = {
+    'Authorization': 'Bearer ptlc_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json',
+    'Content-Type': 'application/json'
+}
+
+folder_data = {
+    'root': '/',
+    'name': 'new-folder'
+}
+
+response = requests.post(f'https://your-panel.com/api/client/servers/{server_id}/files/create-folder', 
+                        headers=headers, json=folder_data)
+print('Folder created successfully')`,
+    php: `<?php
+$serverId = 'd3aac109';
+$client = new GuzzleHttp\\Client();
+
+$folderData = [
+    'root' => '/',
+    'name' => 'new-folder'
+];
+
+$response = $client->post("https://your-panel.com/api/client/servers/{$serverId}/files/create-folder", [
+    'headers' => [
+        'Authorization' => 'Bearer ptlc_YOUR_API_KEY',
+        'Accept' => 'Application/vnd.pterodactyl.v1+json',
+        'Content-Type' => 'application/json'
+    ],
+    'json' => $folderData
+]);
+
+echo "Folder created successfully";
+?>`,
+    go: `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    serverId := "d3aac109"
+    folderData := map[string]interface{}{
+        "root": "/",
+        "name": "new-folder",
+    }
+    
+    jsonData, _ := json.Marshal(folderData)
+    
+    client := &http.Client{}
+    req, _ := http.NewRequest("POST", fmt.Sprintf("https://your-panel.com/api/client/servers/%s/files/create-folder", serverId), bytes.NewBuffer(jsonData))
+    req.Header.Add("Authorization", "Bearer ptlc_YOUR_API_KEY")
+    req.Header.Add("Accept", "Application/vnd.pterodactyl.v1+json")
+    req.Header.Add("Content-Type", "application/json")
+    
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    fmt.Println("Folder created successfully")
+}`,
+    java: `import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+String serverId = "d3aac109";
+String jsonData = """
+{
+  "root": "/",
+  "name": "new-folder"
+}
+""";
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://your-panel.com/api/client/servers/" + serverId + "/files/create-folder"))
+    .header("Authorization", "Bearer ptlc_YOUR_API_KEY")
+    .header("Accept", "Application/vnd.pterodactyl.v1+json")
+    .header("Content-Type", "application/json")
+    .POST(HttpRequest.BodyPublishers.ofString(jsonData))
+    .build();
+
+HttpResponse<String> response = client.send(request, 
+    HttpResponse.BodyHandlers.ofString());
+System.out.println("Folder created successfully");`,
+    csharp: `using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+var serverId = "d3aac109";
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ptlc_YOUR_API_KEY");
+client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+
+var folderData = new {
+    root = "/",
+    name = "new-folder"
+};
+
+var json = JsonSerializer.Serialize(folderData);
+var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+var response = await client.PostAsync($"https://your-panel.com/api/client/servers/{serverId}/files/create-folder", content);
+Console.WriteLine("Folder created successfully");`,
+    ruby: `require 'net/http'
+require 'json'
+
+server_id = 'd3aac109'
+folder_data = {
+  root: '/',
+  name: 'new-folder'
+}
+
+uri = URI("https://your-panel.com/api/client/servers/#{server_id}/files/create-folder")
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(uri)
+request['Authorization'] = 'Bearer ptlc_YOUR_API_KEY'
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+request['Content-Type'] = 'application/json'
+request.body = folder_data.to_json
+
+response = http.request(request)
+puts "Folder created successfully"`
+  }}
+/>
+
+### Success Response (204)
+
+Returns empty response body with status code 204.
+
+---
+
 ## Required Permissions
 
 | Permission | Description |
