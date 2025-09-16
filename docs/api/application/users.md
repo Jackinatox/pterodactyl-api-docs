@@ -433,6 +433,161 @@ puts JSON.parse(response.body)`
 }
 ```
 
+## Get User by External ID
+
+Retrieve user details using an external ID.
+
+```http
+GET /api/application/users/external/{external_id}
+```
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `external_id` | string | External ID of the user |
+
+### Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `include` | string | Include relationships (servers) |
+
+<CodeTabs
+  endpoint="/api/application/users/external/{external_id}"
+  method="GET"
+  examples={{
+    curl: `curl "https://your-panel.com/api/application/users/external/ext-123456" \\
+  -H "Authorization: Bearer ptla_YOUR_API_KEY" \\
+  -H "Accept: Application/vnd.pterodactyl.v1+json"`,
+    javascript: `const axios = require('axios');
+
+const externalId = 'ext-123456';
+const response = await axios.get(\`https://your-panel.com/api/application/users/external/\${externalId}\`, {
+  headers: {
+    'Authorization': 'Bearer ptla_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json'
+  }
+});
+
+console.log(response.data);`,
+    python: `import requests
+
+external_id = 'ext-123456'
+headers = {
+    'Authorization': 'Bearer ptla_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json'
+}
+
+response = requests.get(f'https://your-panel.com/api/application/users/external/{external_id}', 
+                       headers=headers)
+print(response.json())`,
+    php: `<?php
+$client = new GuzzleHttp\\Client();
+$externalId = 'ext-123456';
+
+$response = $client->get("https://your-panel.com/api/application/users/external/{$externalId}", [
+    'headers' => [
+        'Authorization' => 'Bearer ptla_YOUR_API_KEY',
+        'Accept' => 'Application/vnd.pterodactyl.v1+json'
+    ]
+]);
+
+$data = json_decode($response->getBody(), true);
+print_r($data);
+?>`,
+    go: `package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    externalId := "ext-123456"
+    url := fmt.Sprintf("https://your-panel.com/api/application/users/external/%s", externalId)
+    
+    client := &http.Client{}
+    req, _ := http.NewRequest("GET", url, nil)
+    req.Header.Add("Authorization", "Bearer ptla_YOUR_API_KEY")
+    req.Header.Add("Accept", "Application/vnd.pterodactyl.v1+json")
+    
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+    fmt.Println(result)
+}`,
+    java: `import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+String externalId = "ext-123456";
+String url = String.format("https://your-panel.com/api/application/users/external/%s", externalId);
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create(url))
+    .header("Authorization", "Bearer ptla_YOUR_API_KEY")
+    .header("Accept", "Application/vnd.pterodactyl.v1+json")
+    .GET()
+    .build();
+
+HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());`,
+    csharp: `using System.Net.Http;
+using System.Threading.Tasks;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ptla_YOUR_API_KEY");
+client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+
+string externalId = "ext-123456";
+var response = await client.GetAsync($"https://your-panel.com/api/application/users/external/{externalId}");
+var content = await response.Content.ReadAsStringAsync();
+Console.WriteLine(content);`,
+    ruby: `require 'net/http'
+require 'json'
+
+external_id = 'ext-123456'
+uri = URI("https://your-panel.com/api/application/users/external/#{external_id}")
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(uri)
+request['Authorization'] = 'Bearer ptla_YOUR_API_KEY'
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+
+response = http.request(request)
+puts JSON.parse(response.body)`
+  }}
+/>
+
+### Response
+
+```json
+{
+  "object": "user",
+  "attributes": {
+    "id": 1,
+    "external_id": "ext-123456",
+    "uuid": "3f7a8b4c-2e9d-4b6f-8c5e-1a2b3c4d5e6f",
+    "username": "admin",
+    "email": "admin@example.com",
+    "first_name": "System",
+    "last_name": "Administrator",
+    "language": "en",
+    "root_admin": true,
+    "2fa": false,
+    "created_at": "2023-01-15T10:26:32+00:00",
+    "updated_at": "2023-01-15T10:26:32+00:00"
+  }
+}
+```
+
 ## Create New User
 
 Create a new user account in the panel.
