@@ -478,6 +478,185 @@ puts JSON.parse(response.body)
 
 </Tabs>
 
+## Get Server by External ID
+
+Retrieve server details using an external ID.
+
+```http
+GET /api/application/servers/external/{external_id}
+```
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `external_id` | string | External ID of the server |
+
+### Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `include` | string | Include relationships (allocations, user, subusers, pack, nest, egg, variables, location, node, databases, backups) |
+
+<CodeTabs
+  endpoint="/api/application/servers/external/{external_id}"
+  method="GET"
+  examples={{
+    curl: `curl "https://your-panel.com/api/application/servers/external/srv-ext-123" \\
+  -H "Authorization: Bearer ptla_YOUR_API_KEY" \\
+  -H "Accept: Application/vnd.pterodactyl.v1+json"`,
+    javascript: `const axios = require('axios');
+
+const externalId = 'srv-ext-123';
+const response = await axios.get(\`https://your-panel.com/api/application/servers/external/\${externalId}\`, {
+  headers: {
+    'Authorization': 'Bearer ptla_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json'
+  }
+});
+
+console.log(response.data);`,
+    python: `import requests
+
+external_id = 'srv-ext-123'
+headers = {
+    'Authorization': 'Bearer ptla_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json'
+}
+
+response = requests.get(f'https://your-panel.com/api/application/servers/external/{external_id}', 
+                       headers=headers)
+print(response.json())`,
+    php: `<?php
+$client = new GuzzleHttp\\Client();
+$externalId = 'srv-ext-123';
+
+$response = $client->get("https://your-panel.com/api/application/servers/external/{$externalId}", [
+    'headers' => [
+        'Authorization' => 'Bearer ptla_YOUR_API_KEY',
+        'Accept' => 'Application/vnd.pterodactyl.v1+json'
+    ]
+]);
+
+$data = json_decode($response->getBody(), true);
+print_r($data);
+?>`,
+    go: `package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    externalId := "srv-ext-123"
+    url := fmt.Sprintf("https://your-panel.com/api/application/servers/external/%s", externalId)
+    
+    client := &http.Client{}
+    req, _ := http.NewRequest("GET", url, nil)
+    req.Header.Add("Authorization", "Bearer ptla_YOUR_API_KEY")
+    req.Header.Add("Accept", "Application/vnd.pterodactyl.v1+json")
+    
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+    fmt.Println(result)
+}`,
+    java: `import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+String externalId = "srv-ext-123";
+String url = String.format("https://your-panel.com/api/application/servers/external/%s", externalId);
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create(url))
+    .header("Authorization", "Bearer ptla_YOUR_API_KEY")
+    .header("Accept", "Application/vnd.pterodactyl.v1+json")
+    .GET()
+    .build();
+
+HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());`,
+    csharp: `using System.Net.Http;
+using System.Threading.Tasks;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ptla_YOUR_API_KEY");
+client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+
+string externalId = "srv-ext-123";
+var response = await client.GetAsync($"https://your-panel.com/api/application/servers/external/{externalId}");
+var content = await response.Content.ReadAsStringAsync();
+Console.WriteLine(content);`,
+    ruby: `require 'net/http'
+require 'json'
+
+external_id = 'srv-ext-123'
+uri = URI("https://your-panel.com/api/application/servers/external/#{external_id}")
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(uri)
+request['Authorization'] = 'Bearer ptla_YOUR_API_KEY'
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+
+response = http.request(request)
+puts JSON.parse(response.body)`
+  }}
+/>
+
+### Response
+
+```json
+{
+  "object": "server",
+  "attributes": {
+    "id": 1,
+    "external_id": "srv-ext-123",
+    "uuid": "4fcb9e86-cef2-4aab-998e-3ad529761fa5",
+    "identifier": "4fcb9e86",
+    "name": "My Server",
+    "description": "A Minecraft Server",
+    "suspended": false,
+    "limits": {
+      "memory": 1024,
+      "swap": 0,
+      "disk": 2048,
+      "io": 500,
+      "cpu": 100,
+      "threads": null,
+      "oom_disabled": false
+    },
+    "feature_limits": {
+      "databases": 2,
+      "allocations": 1,
+      "backups": 5
+    },
+    "user": 1,
+    "node": 1,
+    "allocation": 1,
+    "nest": 1,
+    "egg": 5,
+    "container": {
+      "startup_command": "java -Xms128M -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}",
+      "image": "quay.io/pterodactyl/core:java",
+      "installed": true,
+      "environment": {
+        "MINECRAFT_VERSION": "latest",
+        "SERVER_JARFILE": "server.jar"
+      }
+    },
+    "updated_at": "2024-01-20T12:00:00+00:00",
+    "created_at": "2024-01-20T12:00:00+00:00"
+  }
+}
+```
 
 ## Create New Server
 

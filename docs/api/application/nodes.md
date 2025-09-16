@@ -469,6 +469,189 @@ puts JSON.parse(response.body)
 
 </Tabs>
 
+## Get Deployable Nodes
+
+Retrieve a list of nodes available for server deployment.
+
+```http
+GET /api/application/nodes/deployable
+```
+
+### Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `per_page` | integer | Results per page (default: 50) |
+| `page` | integer | Page number |
+| `memory` | integer | Required memory in MB |
+| `disk` | integer | Required disk space in MB |
+
+<CodeTabs
+  endpoint="/api/application/nodes/deployable"
+  method="GET"
+  examples={{
+    curl: `curl "https://your-panel.com/api/application/nodes/deployable?memory=1024&disk=5000" \\
+  -H "Authorization: Bearer ptla_YOUR_API_KEY" \\
+  -H "Accept: Application/vnd.pterodactyl.v1+json"`,
+    javascript: `const axios = require('axios');
+
+const response = await axios.get('https://your-panel.com/api/application/nodes/deployable', {
+  headers: {
+    'Authorization': 'Bearer ptla_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json'
+  },
+  params: {
+    memory: 1024,
+    disk: 5000
+  }
+});
+
+console.log(response.data);`,
+    python: `import requests
+
+headers = {
+    'Authorization': 'Bearer ptla_YOUR_API_KEY',
+    'Accept': 'Application/vnd.pterodactyl.v1+json'
+}
+
+params = {
+    'memory': 1024,
+    'disk': 5000
+}
+
+response = requests.get('https://your-panel.com/api/application/nodes/deployable', 
+                       headers=headers, params=params)
+print(response.json())`,
+    php: `<?php
+$client = new GuzzleHttp\\Client();
+
+$response = $client->get('https://your-panel.com/api/application/nodes/deployable', [
+    'headers' => [
+        'Authorization' => 'Bearer ptla_YOUR_API_KEY',
+        'Accept' => 'Application/vnd.pterodactyl.v1+json'
+    ],
+    'query' => [
+        'memory' => 1024,
+        'disk' => 5000
+    ]
+]);
+
+$data = json_decode($response->getBody(), true);
+print_r($data);
+?>`,
+    go: `package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    url := "https://your-panel.com/api/application/nodes/deployable?memory=1024&disk=5000"
+    
+    client := &http.Client{}
+    req, _ := http.NewRequest("GET", url, nil)
+    req.Header.Add("Authorization", "Bearer ptla_YOUR_API_KEY")
+    req.Header.Add("Accept", "Application/vnd.pterodactyl.v1+json")
+    
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+    fmt.Println(result)
+}`,
+    java: `import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://your-panel.com/api/application/nodes/deployable?memory=1024&disk=5000"))
+    .header("Authorization", "Bearer ptla_YOUR_API_KEY")
+    .header("Accept", "Application/vnd.pterodactyl.v1+json")
+    .GET()
+    .build();
+
+HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());`,
+    csharp: `using System.Net.Http;
+using System.Threading.Tasks;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ptla_YOUR_API_KEY");
+client.DefaultRequestHeaders.Add("Accept", "Application/vnd.pterodactyl.v1+json");
+
+var response = await client.GetAsync("https://your-panel.com/api/application/nodes/deployable?memory=1024&disk=5000");
+var content = await response.Content.ReadAsStringAsync();
+Console.WriteLine(content);`,
+    ruby: `require 'net/http'
+require 'json'
+
+uri = URI('https://your-panel.com/api/application/nodes/deployable')
+uri.query = URI.encode_www_form(memory: 1024, disk: 5000)
+
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(uri)
+request['Authorization'] = 'Bearer ptla_YOUR_API_KEY'
+request['Accept'] = 'Application/vnd.pterodactyl.v1+json'
+
+response = http.request(request)
+puts JSON.parse(response.body)`
+  }}
+/>
+
+### Response
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "object": "node",
+      "attributes": {
+        "id": 1,
+        "uuid": "4aec6f5b-8fbc-4f95-bc7f-8f0c8e6b6f0e",
+        "public": true,
+        "name": "Node 1",
+        "description": "Primary node",
+        "location_id": 1,
+        "fqdn": "node1.example.com",
+        "scheme": "https",
+        "behind_proxy": false,
+        "maintenance_mode": false,
+        "memory": 32768,
+        "memory_overallocate": 0,
+        "disk": 409600,
+        "disk_overallocate": 0,
+        "upload_size": 100,
+        "daemon_listen": 8080,
+        "daemon_sftp": 2022,
+        "daemon_base": "/var/lib/pterodactyl/volumes",
+        "created_at": "2024-01-01T00:00:00+00:00",
+        "updated_at": "2024-01-01T00:00:00+00:00",
+        "allocated_resources": {
+          "memory": 8192,
+          "disk": 102400
+        }
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 1,
+      "count": 1,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 1
+    }
+  }
+}
+```
 
 ## Create New Node
 

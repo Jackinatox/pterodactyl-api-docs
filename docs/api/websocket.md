@@ -280,7 +280,8 @@ const socketUrl = 'wss://node1.example.com:8080/api/servers/d3aac109-e5e0-4331-b
 
 const socket = new WebSocket(socketUrl, [], {
   headers: {
-    'Authorization': `Bearer ${token}`
+    'Authorization': `Bearer ${token}`,
+    'Origin': 'https://your-panel.com'
   }
 });
 
@@ -317,7 +318,8 @@ const socketUrl = 'wss://node1.example.com:8080/api/servers/d3aac109-e5e0-4331-b
 
 const socket = new WebSocket(socketUrl, {
   headers: {
-    'Authorization': `Bearer ${token}`
+    'Authorization': `Bearer ${token}`,
+    'Origin': 'https://your-panel.com'
   }
 });
 
@@ -773,7 +775,11 @@ export function useWebSocket(serverId, apiKey) {
       const { token, socket: socketUrl } = await getWebSocketToken();
       tokenRef.current = token;
 
-      const socket = new WebSocket(socketUrl);
+      const socket = new WebSocket(socketUrl, {
+        headers: {
+          'Origin': 'https://your-panel.com'
+        }
+      });
       socketRef.current = socket;
 
       socket.onopen = () => {
@@ -978,7 +984,11 @@ export function useWebSocket(serverId, apiKey) {
       const { token: wsToken, socket: socketUrl } = await getWebSocketToken();
       token.value = wsToken;
 
-      socket.value = new WebSocket(socketUrl);
+      socket.value = new WebSocket(socketUrl, {
+        headers: {
+          'Origin': 'https://your-panel.com'
+        }
+      });
 
       socket.value.onopen = () => {
         console.log('WebSocket connected');
@@ -1142,7 +1152,11 @@ class PterodactylWebSocket {
       const tokenData = await this.getWebSocketToken();
       this.token = tokenData.token;
 
-      this.socket = new WebSocket(tokenData.socket);
+      this.socket = new WebSocket(tokenData.socket, {
+        headers: {
+          'Origin': 'https://your-panel.com'
+        }
+      });
       this.setupEventHandlers();
       
     } catch (error) {

@@ -46,6 +46,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'api/application/users',
         'api/application/servers',
+        'api/application/databases',
         'api/application/nodes',
         'api/application/locations',
         'api/application/nests-eggs',
