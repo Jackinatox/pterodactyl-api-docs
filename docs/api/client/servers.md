@@ -680,7 +680,11 @@ const response = await axios.get(\`https://your-panel.com/api/client/servers/\${
 const { token, socket } = response.data.data;
 
 // Connect to WebSocket
-const ws = new WebSocket(socket);
+const ws = new WebSocket(socket, {
+  headers: {
+    'Origin': 'https://your-panel.com'
+  }
+});
 
 ws.on('open', () => {
   // Authenticate
@@ -747,7 +751,11 @@ ws.run_forever()`
 Use the returned token and socket URL to establish a WebSocket connection:
 
 ```javascript
-const socket = new WebSocket('wss://node.example.com:8080/api/servers/d3aac109-e5e0-4331-b03e-3454f7e136dc/ws');
+const socket = new WebSocket('wss://node.example.com:8080/api/servers/d3aac109-e5e0-4331-b03e-3454f7e136dc/ws', {
+  headers: {
+    'Origin': 'https://your-panel.com'
+  }
+});
 
 socket.addEventListener('open', function (event) {
     // Authenticate with the WebSocket
