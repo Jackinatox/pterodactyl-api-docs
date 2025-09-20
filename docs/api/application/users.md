@@ -893,10 +893,10 @@ PATCH /api/application/users/{user}
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `email` | string | No | User's email address |
-| `username` | string | No | Username |
-| `first_name` | string | No | User's first name |
-| `last_name` | string | No | User's last name |
+| `email` | string | Yes | User's email address |
+| `username` | string | Yes | Username |
+| `first_name` | string | Yes | User's first name |
+| `last_name` | string | Yes | User's last name |
 | `password` | string | No | New password |
 | `language` | string | No | User's preferred language |
 | `root_admin` | boolean | No | Administrative privileges |
